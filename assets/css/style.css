@@ -3,5 +3,9 @@
 }
 main {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
+}
+
+* {
+  border: dotted 1px;
 }
