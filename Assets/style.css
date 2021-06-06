@@ -1,7 +1,12 @@
 #title {
   font-size: 80px;
 }
-main {
+header {
   display: flex;
   justify-content: space-between;
+}
+
+main {
+  display: flex;
+  justify-content: center;
 }
