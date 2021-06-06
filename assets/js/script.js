@@ -4,9 +4,17 @@ var genre = "action";
 var gamesToShow = [];
 
 var getListOfGamesSpecificGenre = function (genre) {
-  // https://api.rawg.io/api/games?key=7daf1ca7cbaf4dff8d122f5a6bcb4160&genres=action
+  // https://api.rawg.io/api/games?key=7daf1ca7cbaf4dff8d122f5a6bcb4160&genres=action&platforms=187
+
+  //Playstation 5 hardcoded
+  var selectedPlatform = 187;
   var apiUrl =
-    "https://api.rawg.io/api/games?key=" + apiKey + "&genres=" + genre;
+    "https://api.rawg.io/api/games?key=" +
+    apiKey +
+    "&genres=" +
+    genre +
+    "&platforms=" +
+    selectedPlatform;
 
   // make a get request to url
   fetch(apiUrl).then(function (response) {
@@ -17,7 +25,7 @@ var getListOfGamesSpecificGenre = function (genre) {
         .json()
         .then(function (data) {
           console.log(data);
-          console.log("Games for 'action' genre: " + data.results[0].name);
+          console.log("Games for 'action' genre & PS5: " + data.results[0].name);
 
           var gamesForSpecificGenre = [];
 
