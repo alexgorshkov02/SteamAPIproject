@@ -1,6 +1,7 @@
 var searchGamesBtn = document.querySelector("#search-games");
 var selectedPlatformEl = document.querySelector("#selected-platform");
 var selectedGameGenreEl = document.querySelector("#selected-game-genre");
+var sectiontoShowGamesEl = document.querySelector("#game-list-to-show");
 
 var apiKey = "7daf1ca7cbaf4dff8d122f5a6bcb4160";
 
@@ -19,6 +20,15 @@ var searchGamesSpecificGenreAndPlatform = function () {
   );
   getListOfGamesSpecificGenreAndPlatform(selectedGameGenre, selectedPlatform);
 };
+
+function gamesToShowfunction(gamesToShow) {
+  // for (var i = 0; i < gamesToShow.length; i++) {
+  // console.log("GAMES_TO_SHOW: " + gamesToShow[i]);
+  gameContainer = document.createElement("div");
+  gameContainer.innerHTML = gamesToShow;
+  sectiontoShowGamesEl.appendChild(gameContainer);
+  // }
+}
 
 var getListOfGamesSpecificGenreAndPlatform = function (genre, platform) {
   // https://api.rawg.io/api/games?key=7daf1ca7cbaf4dff8d122f5a6bcb4160&genres=action&platforms=187
@@ -58,6 +68,7 @@ var getListOfGamesSpecificGenreAndPlatform = function (genre, platform) {
         .then(function (gamesNames) {
           // https://www.cheapshark.com/api/1.0/deals?title=Grand%20Theft%20Auto%20V&onSale=1&exact=1
           console.log("GAMES!!!!: ", gamesNames);
+// var gamesToShow = [];
           for (var i = 0; i < gamesNames.length; i++) {
             var apiUrl =
               "https://www.cheapshark.com/api/1.0/deals?title=" +
@@ -71,23 +82,31 @@ var getListOfGamesSpecificGenreAndPlatform = function (genre, platform) {
               // request was successful
               if (response.ok) {
                 //   console.log(response);
-                response.json().then(function (data) {
-                  console.log("TEST!!!: ", data);
-                  if (data) {
-                    for (var i = 0; i < data.length; i++) {
-                      var dealRating = data[i].dealRating;
-
-                      if (parseInt(dealRating) > 3) {
-                        // To avoid adding the same game again
-                        if (!gamesToShow.includes(data[i].title)) {
-                          //gamesToShow is global
-                          gamesToShow.push(data[i].title);
+                response
+                  .json()
+                  .then(function (data) {
+                    console.log("TEST!!!: ", data);
+                    if (data) {
+                      for (var i = 0; i < data.length; i++) {
+                        var dealRating = data[i].dealRating;
+                        
+                        if (parseInt(dealRating) > 3) {
+                          // To avoid adding the same game again
+                          if (!gamesToShow.includes(data[i].title)) {
+                            //gamesToShow is global
+                            gamesToShow.push(data[i].title);
+                            gamesToShowfunction(data[i].title);
+                          }
                         }
                       }
+                      // console.log("SHOW ON THE PAGE: ", gamesToShow);
                     }
-                    // console.log("SHOW ON THE PAGE: ", gamesToShow);
-                  }
-                });
+                    
+                  });
+                  // .then(function (data) {
+                  //   console.log("DATA befor the function:", data);
+                    
+                  // });
               } else {
                 alert("Error: " + response.statusText);
               }
@@ -95,7 +114,11 @@ var getListOfGamesSpecificGenreAndPlatform = function (genre, platform) {
               //   return gamesToShow;
             });
           }
-        });
+
+// return gamesToShow;
+        // }) .then(function (data) {
+        // gamesToShowfunction()})
+        });  
     } else {
       alert("Error: " + response.statusText);
     }
@@ -103,7 +126,9 @@ var getListOfGamesSpecificGenreAndPlatform = function (genre, platform) {
 };
 
 searchGamesBtn.addEventListener("click", searchGamesSpecificGenreAndPlatform);
+
+// TODO: sectiontoShowGamesEl.addEventListener("click", functionTodisplay)
 // getListOfGamesSpecificGenre(genre, selectedPlatform);
 
 //gamesToShow is global. TODO: Probably it will be better to use local like: var gamesToShowArray = getListOfGamesSpecificGenre(genre); and return it in the function
-console.log("SHOW ON THE PAGE: ", gamesToShow);
+// console.log("SHOW ON THE PAGE: ", gamesToShow);
