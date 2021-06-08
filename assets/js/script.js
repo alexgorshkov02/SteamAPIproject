@@ -1,20 +1,37 @@
+var searchGamesBtn = document.querySelector("#search-games");
+var selectedPlatformEl = document.querySelector("#selected-platform");
+var selectedGameGenreEl = document.querySelector("#selected-game-genre");
+
 var apiKey = "7daf1ca7cbaf4dff8d122f5a6bcb4160";
-var genre = "action";
 
 var gamesToShow = [];
 
-var getListOfGamesSpecificGenre = function (genre) {
+var searchGamesSpecificGenreAndPlatform = function () {
+  var selectedGameGenre =
+    selectedGameGenreEl.options[selectedGameGenreEl.selectedIndex].id;
+  var selectedPlatform =
+    selectedPlatformEl.options[selectedPlatformEl.selectedIndex].id;
+  console.log(
+    "selectedPlatform!!!!!!!!!!!!!!!!!!!!!!!!: " +
+      selectedGameGenre +
+      "; selectedPlatform!!!!!!!!!!!!!!!!!!!!!!!!: " +
+      selectedPlatform
+  );
+  getListOfGamesSpecificGenreAndPlatform(selectedGameGenre, selectedPlatform);
+};
+
+var getListOfGamesSpecificGenreAndPlatform = function (genre, platform) {
   // https://api.rawg.io/api/games?key=7daf1ca7cbaf4dff8d122f5a6bcb4160&genres=action&platforms=187
 
-  //Playstation 5 hardcoded
-  var selectedPlatform = 187;
   var apiUrl =
     "https://api.rawg.io/api/games?key=" +
     apiKey +
     "&genres=" +
     genre +
     "&platforms=" +
-    selectedPlatform;
+    platform;
+
+  console.log("apiUrl: " + apiUrl);
 
   // make a get request to url
   fetch(apiUrl).then(function (response) {
@@ -24,8 +41,10 @@ var getListOfGamesSpecificGenre = function (genre) {
       response
         .json()
         .then(function (data) {
-          console.log(data);
-          console.log("Games for 'action' genre & PS5: " + data.results[0].name);
+          console.log("All data: ", data);
+          console.log(
+            "Games for the selected genre & platform: " + data.results[0].name
+          );
 
           var gamesForSpecificGenre = [];
 
@@ -59,8 +78,11 @@ var getListOfGamesSpecificGenre = function (genre) {
                       var dealRating = data[i].dealRating;
 
                       if (parseInt(dealRating) > 3) {
-                        //gamesToShow is global
-                        gamesToShow.push(data[i].title);
+                        // To avoid adding the same game again
+                        if (!gamesToShow.includes(data[i].title)) {
+                          //gamesToShow is global
+                          gamesToShow.push(data[i].title);
+                        }
                       }
                     }
                     // console.log("SHOW ON THE PAGE: ", gamesToShow);
@@ -80,7 +102,8 @@ var getListOfGamesSpecificGenre = function (genre) {
   });
 };
 
-getListOfGamesSpecificGenre(genre);
+searchGamesBtn.addEventListener("click", searchGamesSpecificGenreAndPlatform);
+// getListOfGamesSpecificGenre(genre, selectedPlatform);
 
 //gamesToShow is global. TODO: Probably it will be better to use local like: var gamesToShowArray = getListOfGamesSpecificGenre(genre); and return it in the function
 console.log("SHOW ON THE PAGE: ", gamesToShow);
