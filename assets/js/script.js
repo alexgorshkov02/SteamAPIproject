@@ -4,6 +4,7 @@ var selectedGameGenreEl = document.querySelector("#selected-game-genre");
 var sectiontoShowGamesEl = document.querySelector("#game-list-to-show");
 var gameDetails = document.querySelector("#game-details");
 
+var apiKey = "6a8b35e595b04b39a8276e71021fa526";
 
 // How many games to search
 totalGamesToShowOnPage = 10;
@@ -45,7 +46,9 @@ var searchGamesSpecificGenreAndPlatform = function () {
 
 async function getGamesToShow(genre, platform, page, gamesToShow) {
   while (gamesToShow.length < totalGamesToShowOnPage) {
-    
+
+    console.log("gamesToShow: ", gamesToShow);
+
   var apiUrlRAWG =
     "https://api.rawg.io/api/games?key=" +
     apiKey +
@@ -58,28 +61,20 @@ async function getGamesToShow(genre, platform, page, gamesToShow) {
 
 console.log("apiUrlRAWG: " + apiUrlRAWG);
 
-    var games = await fetch(apiUrlRAWG).then(function(response) {
-      if (response.ok) {
 
-       response.json().then(function (data){
+    const games = await fetch(apiUrlRAWG).then(response => response.json()).then(function (data){ 
+
+    
 
       if (data.next !== null ) {
         var gameNames = [];
       for (var i = 0; i < data.results.length; i++) {
         gameNames.push(data.results[i].name);
       }
-    }
+    
     return gameNames; 
-      })
-    }  else {
-      // console.log("gamesToShow", gamesToShow);
- if (gamesToShow) {
-   return gamesToShow; 
-  } else {
-    return ("No games found");
   }
-
-    }
+    
     });
 
     if ((games && games.length === 0) || (games === "No games found")) {
@@ -121,7 +116,7 @@ return gamesToShow;
 
 function gamesToShowfunction(gamesToShow) {
   // console.log(typeof gamesToShow);
-  if ((gamesToShow.length === 0) || (gamesToShow.constructor === String)) {
+  if (gamesToShow.length === 0) {
     gameContainer = document.createElement("div");
     gameContainer.innerHTML = "No games found";
     sectiontoShowGamesEl.appendChild(gameContainer);
