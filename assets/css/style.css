@@ -4,12 +4,31 @@
 main {
   display: flex;
   justify-content: center;
+  color: white;
+  border: 2px solid #984b43;
+  font-size: 15px;
 }
-
 * {
-  border: dotted 1px;
+  border-radius: 3px;
 }
 header {
   display: flex;
   justify-content: flex-start;
+  background-color: #233237;
+}
+
+#banner {
+  background-image: url("./video-game-1332694_1920.png");
+  background-size: cover;
+  background-position: center;
+  height: 170px;
+}
+#title {
+  color: white;
+  text-align: center;
+  display: inline-flex;
+}
+
+body {
+  background-color: #233237;
 }
