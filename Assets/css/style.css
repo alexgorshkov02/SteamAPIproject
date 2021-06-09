@@ -1,0 +1,15 @@
+#title {
+  font-size: 80px;
+}
+main {
+  display: flex;
+  justify-content: center;
+}
+
+* {
+  border: dotted 1px;
+}
+header {
+  display: flex;
+  justify-content: flex-start;
+}
