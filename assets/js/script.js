@@ -3,10 +3,11 @@ var selectedPlatformEl = document.querySelector("#selected-platform");
 var selectedGameGenreEl = document.querySelector("#selected-game-genre");
 var sectiontoShowGamesEl = document.querySelector("#game-list-to-show");
 var gameDetails = document.querySelector("#game-details");
-var apiKey = "7daf1ca7cbaf4dff8d122f5a6bcb4160";
+
+var gameInfoEl = document.getElementById("game-info")
+var apiKey = "6a8b35e595b04b39a8276e71021fa526";
 
 var gamesToShow = [];
-
 var searchGamesSpecificGenreAndPlatform = function () {
   var selectedGameGenre =
     selectedGameGenreEl.options[selectedGameGenreEl.selectedIndex].id;
@@ -20,7 +21,6 @@ var searchGamesSpecificGenreAndPlatform = function () {
   );
   getListOfGamesSpecificGenreAndPlatform(selectedGameGenre, selectedPlatform);
 };
-
 function gamesToShowfunction(gamesToShow) {
   // for (var i = 0; i < gamesToShow.length; i++) {
   // console.log("GAMES_TO_SHOW: " + gamesToShow[i]);
@@ -28,7 +28,6 @@ function gamesToShowfunction(gamesToShow) {
   gameContainer.innerHTML = gamesToShow;
   sectiontoShowGamesEl.appendChild(gameContainer);
 }
-
 var getListOfGamesSpecificGenreAndPlatform = function (genre, platform) {
   // https://api.rawg.io/api/games?key=7daf1ca7cbaf4dff8d122f5a6bcb4160&genres=action&platforms=187
 
@@ -41,9 +40,7 @@ var getListOfGamesSpecificGenreAndPlatform = function (genre, platform) {
     genre +
     "&platforms=" +
     platform;
-
   console.log("apiUrl: " + apiUrl);
-
   // make a get request to url
   fetch(apiUrl).then(function (response) {
     // request was successful
@@ -56,13 +53,10 @@ var getListOfGamesSpecificGenreAndPlatform = function (genre, platform) {
           console.log(
             "Games for the selected genre & platform: " + data.results[0].name
           );
-
           var gamesForSpecificGenre = [];
-
           for (var i = 0; i < data.results.length; i++) {
             gamesForSpecificGenre.push(data.results[i].name);
           }
-
           //hardcoded just for example
           return gamesForSpecificGenre;
         })
@@ -109,7 +103,6 @@ var getListOfGamesSpecificGenreAndPlatform = function (genre, platform) {
               } else {
                 alert("Error: " + response.statusText);
               }
-
               //   return gamesToShow;
             });
           }
@@ -123,7 +116,6 @@ var getListOfGamesSpecificGenreAndPlatform = function (genre, platform) {
     }
   });
 };
-
 searchGamesBtn.addEventListener("click", searchGamesSpecificGenreAndPlatform);
 sectiontoShowGamesEl.addEventListener("click", function (event) {
   console.log(event.target.innerHTML);
@@ -177,6 +169,25 @@ sectiontoShowGamesEl.addEventListener("click", function (event) {
                     }
                   }
                 }
+
+                // New Div for game clicked
+                var gameNameDiv = document.createElement("div")
+                gameNameDiv.textContent = gameName
+               gameInfoEl.append(gameNameDiv)
+                // New Div for storeName
+                var gameStoreDiv = document.createElement("div")
+                gameStoreDiv.textContent = data[0].storeName
+                gameInfoEl.append(gameStoreDiv)
+
+                var gamePriceDiv = document.createElement("a")
+                gamePriceDiv.textContent = " Price: $" + storeObjArr[0].storePrice
+                gameInfoEl.append(gamePriceDiv)
+
+                
+                // gameInfoEl.append(data[0].storeName)
+                // gameInfoEl.append(" Price: $" +storeObjArr[0].storePrice)
+                
+
                 console.log(arr);
                 // var storeId = data[0].storeName;
                 // console.log(storeId);
