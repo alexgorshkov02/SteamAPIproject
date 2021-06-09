@@ -9,12 +9,17 @@ var apiKey = "6a8b35e595b04b39a8276e71021fa526";
 // How many games to search
 totalGamesToShowOnPage = 10;
 
+var gameInfoEl = document.getElementById("game-info")
+var apiKey = "6a8b35e595b04b39a8276e71021fa526";
 
+
+var gamesToShow = [];
 var searchGamesSpecificGenreAndPlatform = function () {
   var selectedGameGenre =
     selectedGameGenreEl.options[selectedGameGenreEl.selectedIndex].id;
   var selectedPlatform =
     selectedPlatformEl.options[selectedPlatformEl.selectedIndex].id;
+
   // console.log(
   //   "selectedPlatform!!!!!!!!!!!!!!!!!!!!!!!!: " +
   //     selectedGameGenre +
@@ -25,6 +30,7 @@ var searchGamesSpecificGenreAndPlatform = function () {
   // Initialize the variables for the first usage
   var gamesToShow = [];
   var page = 1;
+  
   // clears game section after new search
   sectiontoShowGamesEl.innerHTML = "";
   gamesToShow = getGamesToShow(selectedGameGenre, selectedPlatform, page, gamesToShow).then(function (gamesToShow) {
@@ -89,7 +95,7 @@ console.log("apiUrlRAWG: " + apiUrlRAWG);
 
     await fetch(apiUrlCheapShark).then(response => response.json()).then(function (data){
       if (data) {
-
+        
           // Check if the game is on sale in any store
           for (var i = 0; i < data.length; i++) {
             if ((!gamesToShow.includes(data[i].title)) && (parseInt(data[i].dealRating)) > 3) {
@@ -99,6 +105,7 @@ console.log("apiUrlRAWG: " + apiUrlRAWG);
       
       
         });
+
  }}
  page++;}
    
@@ -177,6 +184,25 @@ sectiontoShowGamesEl.addEventListener("click", function (event) {
                     }
                   }
                 }
+
+                // New Div for game clicked
+                var gameNameDiv = document.createElement("div")
+                gameNameDiv.textContent = gameName
+               gameInfoEl.append(gameNameDiv)
+                // New Div for storeName
+                var gameStoreDiv = document.createElement("div")
+                gameStoreDiv.textContent = data[0].storeName
+                gameInfoEl.append(gameStoreDiv)
+
+                var gamePriceDiv = document.createElement("a")
+                gamePriceDiv.textContent = " Price: $" + storeObjArr[0].storePrice
+                gameInfoEl.append(gamePriceDiv)
+
+                
+                // gameInfoEl.append(data[0].storeName)
+                // gameInfoEl.append(" Price: $" +storeObjArr[0].storePrice)
+                
+
                 console.log(arr);
                 // var storeId = data[0].storeName;
                 // console.log(storeId);

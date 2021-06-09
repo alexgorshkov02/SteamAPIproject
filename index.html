@@ -5,17 +5,15 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css"> -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css">
   <link rel="stylesheet" href="./assets/css/style.css">
   <title>DealSella</title>
 </head>
 
 <body>
-  <nav class="navbar" role="navigation" aria-label="main navigation">
-    <div class="navbar-brand">
-      <p class="navbar-item">
-        <span id="title">DealSella</span>
-      </p>
+  <nav>
+    <div id="banner">
+      <span id="title">DealSella</span>
       <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
@@ -25,7 +23,7 @@
   </nav>
   <header>
     <div class="select is-success">
-      <select id ="selected-game-genre">
+      <select id="selected-game-genre">
         <option>Select Game Genre</option>
         <option id="4">Action</option>
         <option id="3">Adventure</option>
@@ -35,7 +33,7 @@
       </select>
     </div>
     <div class="select is-success">
-      <select id ="selected-platform">
+      <select id="selected-platform">
         <option>Select Platform</option>
         <option id="4">PC</option>
         <option id="187">Playstation 5</option>
@@ -53,43 +51,21 @@
   </header>
   <main>
     <section>
-      <p class="game-list-header">Games list:</p>
-      <div class="container is-fluid">
-        <div id = "game-list-to-show" class="notification is-primary">
-          
+      <div class="container is-fluid is-size-3">
+        <div id="game-list-to-show">
+          <h2>Your Game Choices:</h2>
+          <br>
+          <br>
         </div>
       </div>
     </section>
     <section>
-      <p class="game-list-header">Game details:</p>
-      <div class="container is-fluid">
-        <div class="notification is-primary">
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
+      <div class="container is-fluid is-size-3">
+        <div id="game-info" class="is-size-5">
+          <h1>Game Info: </h1>
+          <figure class="image is-128x128">
+            <img src="https://bulma.io/images/placeholders/128x128.png">
+          </figure>
         </div>
       </div>
     </section>
