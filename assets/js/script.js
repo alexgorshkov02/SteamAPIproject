@@ -3,130 +3,136 @@ var selectedPlatformEl = document.querySelector("#selected-platform");
 var selectedGameGenreEl = document.querySelector("#selected-game-genre");
 var sectiontoShowGamesEl = document.querySelector("#game-list-to-show");
 var gameDetails = document.querySelector("#game-details");
-var apiKey = "7daf1ca7cbaf4dff8d122f5a6bcb4160";
 
-var gamesToShow = [];
+var apiKey = "4a91d9e2d3474c96b23d91e7bb9f8110";
+
+// How many games to search
+totalGamesToShowOnPage = 10;
+
 
 var searchGamesSpecificGenreAndPlatform = function () {
   var selectedGameGenre =
     selectedGameGenreEl.options[selectedGameGenreEl.selectedIndex].id;
   var selectedPlatform =
     selectedPlatformEl.options[selectedPlatformEl.selectedIndex].id;
-  console.log(
-    "selectedPlatform!!!!!!!!!!!!!!!!!!!!!!!!: " +
-      selectedGameGenre +
-      "; selectedPlatform!!!!!!!!!!!!!!!!!!!!!!!!: " +
-      selectedPlatform
-  );
-  getListOfGamesSpecificGenreAndPlatform(selectedGameGenre, selectedPlatform);
-};
+  // console.log(
+  //   "selectedPlatform!!!!!!!!!!!!!!!!!!!!!!!!: " +
+  //     selectedGameGenre +
+  //     "; selectedPlatform!!!!!!!!!!!!!!!!!!!!!!!!: " +
+  //     selectedPlatform
+  // );
 
-function gamesToShowfunction(gamesToShow) {
-  // for (var i = 0; i < gamesToShow.length; i++) {
-  // console.log("GAMES_TO_SHOW: " + gamesToShow[i]);
-  gameContainer = document.createElement("div");
-  gameContainer.innerHTML = gamesToShow;
-  sectiontoShowGamesEl.appendChild(gameContainer);
-}
-
-var getListOfGamesSpecificGenreAndPlatform = function (genre, platform) {
-  // https://api.rawg.io/api/games?key=7daf1ca7cbaf4dff8d122f5a6bcb4160&genres=action&platforms=187
-
+  // Initialize the variables for the first usage
+  var gamesToShow = [];
+  var page = 1;
   // clears game section after new search
   sectiontoShowGamesEl.innerHTML = "";
-  var apiUrl =
+  gamesToShow = getGamesToShow(selectedGameGenre, selectedPlatform, page, gamesToShow).then(function (gamesToShow) {
+//  if (gamesToShow.length < 10 ) {
+//   console.log("NOT DONE");
+//  } else {
+// display all collected games 
+ gamesToShowfunction(gamesToShow);
+//  console.log("DONE");
+//  }
+  });
+};
+
+async function getGamesToShow(genre, platform, page, gamesToShow) {
+  while (gamesToShow.length < totalGamesToShowOnPage) {
+    
+  var apiUrlRAWG =
     "https://api.rawg.io/api/games?key=" +
     apiKey +
     "&genres=" +
     genre +
     "&platforms=" +
-    platform;
+    platform +
+    "&page=" +
+    page;
 
-  console.log("apiUrl: " + apiUrl);
+console.log("apiUrlRAWG: " + apiUrlRAWG);
 
-  // make a get request to url
-  fetch(apiUrl).then(function (response) {
-    // request was successful
-    if (response.ok) {
-      //   console.log(response);
-      response
-        .json()
-        .then(function (data) {
-          console.log("All data: ", data);
-          console.log(
-            "Games for the selected genre & platform: " + data.results[0].name
-          );
+    var games = await fetch(apiUrlRAWG).then(function(response) {
+      if (response.ok) {
 
-          var gamesForSpecificGenre = [];
+       response.json().then(function (data){
 
-          for (var i = 0; i < data.results.length; i++) {
-            gamesForSpecificGenre.push(data.results[i].name);
-          }
-
-          //hardcoded just for example
-          return gamesForSpecificGenre;
-        })
-        .then(function (gamesNames) {
-          // https://www.cheapshark.com/api/1.0/deals?title=Grand%20Theft%20Auto%20V&onSale=1&exact=1
-          console.log("GAMES!!!!: ", gamesNames);
-          // var gamesToShow = [];
-          for (var i = 0; i < gamesNames.length; i++) {
-            var apiUrl =
-              "https://www.cheapshark.com/api/1.0/deals?title=" +
-              gamesNames[i] +
-              "&onSale=1" +
-              //   To get only exact names
-              "&exact=1";
-            console.log(apiUrl);
-            // make a get request to url
-            fetch(apiUrl).then(function (response) {
-              // request was successful
-              if (response.ok) {
-                //   console.log(response);
-                response.json().then(function (data) {
-                  console.log("TEST!!!: ", data);
-
-                  if (data) {
-                    for (var i = 0; i < data.length; i++) {
-                      var dealRating = data[i].dealRating;
-
-                      if (parseInt(dealRating) > 3) {
-                        // To avoid adding the same game again
-                        if (!gamesToShow.includes(data[i].title)) {
-                          //gamesToShow is global
-                          gamesToShow.push(data[i].title);
-                          gamesToShowfunction(data[i].title);
-                        }
-                      }
-                    }
-                    // console.log("SHOW ON THE PAGE: ", gamesToShow);
-                  }
-                });
-                // .then(function (data) {
-                //   console.log("DATA befor the function:", data);
-
-                // });
-              } else {
-                alert("Error: " + response.statusText);
-              }
-
-              //   return gamesToShow;
-            });
-          }
-
-          // return gamesToShow;
-          // }) .then(function (data) {
-          // gamesToShowfunction()})
-        });
-    } else {
-      alert("Error: " + response.statusText);
+      if (data.next !== null ) {
+        var gameNames = [];
+      for (var i = 0; i < data.results.length; i++) {
+        gameNames.push(data.results[i].name);
+      }
     }
-  });
-};
+    return gameNames; 
+      })
+    }  else {
+      // console.log("gamesToShow", gamesToShow);
+ if (gamesToShow) {
+   return gamesToShow; 
+  } else {
+    return ("No games found");
+  }
+
+    }
+    });
+
+    if ((games && games.length === 0) || (games === "No games found")) {
+      gamesToShow = games;
+      break;
+    }
+  
+    if (games !== undefined ) {
+ for (var i = 0; i < games.length; i++) {
+    var apiUrlCheapShark =
+    "https://www.cheapshark.com/api/1.0/deals?title=" +
+    games[i] +
+    "&onSale=1" +
+    //   To get only exact names
+    "&exact=1";
+  console.log(apiUrlCheapShark);
+
+
+    await fetch(apiUrlCheapShark).then(response => response.json()).then(function (data){
+      if (data) {
+
+          // Check if the game is on sale in any store
+          for (var i = 0; i < data.length; i++) {
+            if ((!gamesToShow.includes(data[i].title)) && (parseInt(data[i].dealRating)) > 3) {
+              gamesToShow.push(data[i].title);
+            }
+        }}
+      
+      
+        });
+ }}
+ page++;}
+   
+
+return gamesToShow;
+}
+
+
+function gamesToShowfunction(gamesToShow) {
+  // console.log(typeof gamesToShow);
+  if ((gamesToShow.length === 0) || (gamesToShow.constructor === String)) {
+    gameContainer = document.createElement("div");
+    gameContainer.innerHTML = "No games found";
+    sectiontoShowGamesEl.appendChild(gameContainer);
+  } else {
+  for (var i = 0; i < gamesToShow.length; i++) {
+  // console.log("GAMES_TO_SHOW: " + gamesToShow[i]);
+  gameContainer = document.createElement("div");
+  gameContainer.innerHTML = gamesToShow[i];
+  sectiontoShowGamesEl.appendChild(gameContainer);
+  }
+}}
+
 
 searchGamesBtn.addEventListener("click", searchGamesSpecificGenreAndPlatform);
+
 sectiontoShowGamesEl.addEventListener("click", function (event) {
-  console.log(event.target.innerHTML);
+  // console.log(event.target.innerHTML);
   var gameName = event.target.innerHTML;
   var apiUrl =
     "https://www.cheapshark.com/api/1.0/deals?title=" +
@@ -187,7 +193,3 @@ sectiontoShowGamesEl.addEventListener("click", function (event) {
     }
   });
 });
-// TODO: sectiontoShowGamesEl.addEventListener("click", functionTodisplay)
-// getListOfGamesSpecificGenre(genre, selectedPlatform);
-
-//gamesToShow is global. TODO: Probably it will be better to use local like: var gamesToShowArray = getListOfGamesSpecificGenre(genre); and return it in the
