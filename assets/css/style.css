@@ -3,13 +3,36 @@
 }
 main {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  color: white;
 }
 
-* {
-  border: dotted 1px;
-}
 header {
   display: flex;
   justify-content: flex-start;
+}
+
+#selected-game-genre, #selected-platform, .button {
+  height: 38px;
+  border-style: none;
+  border: 1px solid #00d1b2;
+  border-radius: 10px;
+}
+
+.button {
+  background-color: #00d1b2;
+}
+
+.is-fluid {
+  background-color: #00d1b2;
+  border-radius: 3px;
+  width: 650px;
+  height: 500px;
+  margin-top: -41px;
+}
+
+.game-list-header {
+  color: #00d1b2;
+  text-decoration: underline;
+  font-size: 35px;
 }
