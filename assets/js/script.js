@@ -9,7 +9,7 @@ var apiKey = "6a8b35e595b04b39a8276e71021fa526";
 // How many games to search
 totalGamesToShowOnPage = 5;
 
-var gameInfoEl = document.getElementById("game-price-display")
+var gameInfoEl = document.getElementById("game-price-display");
 var apiKey = "6a8b35e595b04b39a8276e71021fa526";
 
 var gamesToShow = [];
@@ -19,14 +19,6 @@ var searchGamesSpecificGenreAndPlatform = function () {
   var selectedPlatform =
     selectedPlatformEl.options[selectedPlatformEl.selectedIndex].id;
 
-  // console.log(
-  //   "selectedPlatform!!!!!!!!!!!!!!!!!!!!!!!!: " +
-  //     selectedGameGenre +
-  //     "; selectedPlatform!!!!!!!!!!!!!!!!!!!!!!!!: " +
-  //     selectedPlatform
-  // );
-
-  // Initialize the variables for the first usage
   var gamesToShow = [];
   var page = 1;
 
@@ -38,20 +30,12 @@ var searchGamesSpecificGenreAndPlatform = function () {
     page,
     gamesToShow
   ).then(function (gamesToShow) {
-    //  if (gamesToShow.length < 10 ) {
-    //   console.log("NOT DONE");
-    //  } else {
-    // display all collected games
     gamesToShowfunction(gamesToShow);
-    //  console.log("DONE");
-    //  }
   });
 };
 
 async function getGamesToShow(genre, platform, page, gamesToShow) {
   while (gamesToShow.length < totalGamesToShowOnPage) {
-    console.log("gamesToShow: ", gamesToShow);
-
     var apiUrlRAWG =
       "https://api.rawg.io/api/games?key=" +
       apiKey +
@@ -61,8 +45,6 @@ async function getGamesToShow(genre, platform, page, gamesToShow) {
       platform +
       "&page=" +
       page;
-
-    console.log("apiUrlRAWG: " + apiUrlRAWG);
     var game = [];
     const response = await fetch(apiUrlRAWG);
     if (response.ok) {
@@ -86,7 +68,6 @@ async function getGamesToShow(genre, platform, page, gamesToShow) {
           "&onSale=1" +
           //   To get only exact names
           "&exact=1";
-        console.log(apiUrlCheapShark);
 
         await fetch(apiUrlCheapShark)
           .then((response) => response.json())
@@ -112,14 +93,12 @@ async function getGamesToShow(genre, platform, page, gamesToShow) {
 }
 
 function gamesToShowfunction(gamesToShow) {
-  // console.log(typeof gamesToShow);
   if (gamesToShow.length === 0) {
     gameContainer = document.createElement("div");
     gameContainer.innerHTML = "No games found";
     sectiontoShowGamesEl.appendChild(gameContainer);
   } else {
     for (var i = 0; i < gamesToShow.length; i++) {
-      // console.log("GAMES_TO_SHOW: " + gamesToShow[i]);
       gameContainer = document.createElement("div");
       gameContainer.innerHTML = gamesToShow[i];
       sectiontoShowGamesEl.appendChild(gameContainer);
@@ -131,7 +110,6 @@ searchGamesBtn.addEventListener("click", searchGamesSpecificGenreAndPlatform);
 
 sectiontoShowGamesEl.addEventListener("click", function (event) {
   clearContent();
-  // console.log(event.target.innerHTML);
   var gameName = event.target.innerHTML;
   var apiUrl =
     "https://www.cheapshark.com/api/1.0/deals?title=" +
@@ -154,7 +132,6 @@ sectiontoShowGamesEl.addEventListener("click", function (event) {
             storeObjArr.push(storeObj);
           }
 
-          console.log(storeObjArr);
           return storeObjArr;
         })
         .then(function (storeObjArr) {
@@ -162,20 +139,14 @@ sectiontoShowGamesEl.addEventListener("click", function (event) {
           fetch(apiStore).then(function (response) {
             if (response.ok) {
               response.json().then(function (data) {
-                console.log(data);
                 var arr = [];
-                // console.log("storeId: " + storeId);
                 for (var i = 0; i < storeObjArr.length; i++) {
-                  // console.log("data[i].storeID: " + data[i].storeID);
                   for (var j = 0; j < data.length; j++) {
                     if (storeObjArr[i].storeId === data[j].storeID) {
-                      console.log("Store: " + data[j].storeName);
-
                       var obj = {
                         storeName: data[j].storeName,
                         storePrice: storeObjArr[i].storePrice,
                       };
-                      console.log(obj);
                     }
                     if (obj !== undefined && !arr.includes(obj)) {
                       arr.push(obj);
@@ -183,40 +154,22 @@ sectiontoShowGamesEl.addEventListener("click", function (event) {
                   }
                 }
                 // New Div for game clicked
-                var gameNameDiv = document.createElement("div")
-                gameNameDiv.textContent = gameName
-               gameInfoEl.append(gameNameDiv)
+                var gameNameDiv = document.createElement("div");
+                gameNameDiv.textContent = gameName;
+                gameInfoEl.append(gameNameDiv);
 
-                // div for game image
-                // var gameImgDiv = document.createElement("img")
-                // gameImgDiv.setAttribute
-                // New Div for storeName
-                
-                for(var i = 0; i < storeObjArr.length; i++){
-            
-                var displayContainer = document.createElement("div")
-                displayContainer.textContent = "Store: " + data[i].storeName + " $" + storeObjArr[i].storePrice
-                // displayContainer.append(gameStoreDiv)
-                // displayContainer.append(gamePriceDiv)
-                
-                
-                // var gameStoreDiv = document.createElement("div")
-                // gameStoreDiv.textContent = data[i].storeName
-                
+                for (var i = 0; i < storeObjArr.length; i++) {
+                  var displayContainer = document.createElement("div");
+                  displayContainer.textContent =
+                    "Store: " +
+                    data[i].storeName +
+                    " $" +
+                    storeObjArr[i].storePrice;
 
-                // var gamePriceDiv = document.createElement("a")
-                // gamePriceDiv.textContent = storeObjArr[i].storePrice
-                gameInfoEl.appendChild(displayContainer)
+                  gameInfoEl.appendChild(displayContainer);
 
-                displayContainer.style.display = "flex"
+                  displayContainer.style.display = "flex";
                 }
-
-                // gameInfoEl.append(data[0].storeName)
-                // gameInfoEl.append(" Price: $" +storeObjArr[0].storePrice)
-
-                console.log(arr);
-                // var storeId = data[0].storeName;
-                // console.log(storeId);
               });
             }
           });
@@ -226,31 +179,33 @@ sectiontoShowGamesEl.addEventListener("click", function (event) {
 });
 
 //Display image of game clicked
-sectiontoShowGamesEl.addEventListener("click", function(event) {
+sectiontoShowGamesEl.addEventListener("click", function (event) {
   clearContent();
-  var gameImgEl = document.getElementById("game-image")
+  var gameImgEl = document.getElementById("game-image");
   var gameClicked = event.target.innerHTML;
-  var rawgImageUrl = "https://api.rawg.io/api/games?key=" + apiKey + "&search=" + gameClicked + "&exact=1"
-fetch(rawgImageUrl).then(function (response) {
-  if(response.ok) {
-    response.json().then(function (data) {
-      // var imgArr = [];
-      // for(var i = 0; i < data.results.length; i++){
-        console.log(data.results[0].background_image)
-      var imgDisplay = data.results[0].background_image
-      var gameImg = document.createElement("img")
-      gameImg.style.width = '500px'
-      gameImg.style.height = 'auto'
-      gameImg.setAttribute("src", imgDisplay)
-      gameImgEl.append(gameImg)
-    })  
-}
-})
-})
+  var rawgImageUrl =
+    "https://api.rawg.io/api/games?key=" +
+    apiKey +
+    "&search=" +
+    gameClicked +
+    "&exact=1";
+  fetch(rawgImageUrl).then(function (response) {
+    if (response.ok) {
+      response.json().then(function (data) {
+        var imgDisplay = data.results[0].background_image;
+        var gameImg = document.createElement("img");
+        gameImg.style.width = "500px";
+        gameImg.style.height = "auto";
+        gameImg.setAttribute("src", imgDisplay);
+        gameImgEl.append(gameImg);
+      });
+    }
+  });
+});
 
 function clearContent() {
-  var modifiedArea = document.getElementById("game-price-display");  modifiedArea.textContent = "";
-  var modifiedArea = document.getElementById("game-image");  modifiedArea.textContent = "";
-}   
-      
- 
+  var modifiedArea = document.getElementById("game-price-display");
+  modifiedArea.textContent = "";
+  var modifiedArea = document.getElementById("game-image");
+  modifiedArea.textContent = "";
+}
