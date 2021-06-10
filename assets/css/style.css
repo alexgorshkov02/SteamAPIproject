@@ -30,7 +30,7 @@ header {
   height: 170px;
 }
 #title {
-  color: white;
+  color: #ff00ff;
   text-align: center;
   display: inline-flex;
 }
@@ -41,4 +41,17 @@ body {
 
 html {
   background-color: #233237;
+}
+
+@media only screen and (max-width: 400px) {
+  #banner {
+    background-size: 100%;
+  }
+  header {
+    width: 100%;
+    flex-direction: column;
+  }
+  main {
+    flex-direction: column;
+  }
 }
