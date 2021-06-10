@@ -12,7 +12,6 @@ totalGamesToShowOnPage = 5;
 var gameInfoEl = document.getElementById("game-price-display")
 var apiKey = "6a8b35e595b04b39a8276e71021fa526";
 
-
 var gamesToShow = [];
 var searchGamesSpecificGenreAndPlatform = function () {
   var selectedGameGenre =
@@ -30,89 +29,87 @@ var searchGamesSpecificGenreAndPlatform = function () {
   // Initialize the variables for the first usage
   var gamesToShow = [];
   var page = 1;
-  
+
   // clears game section after new search
   sectiontoShowGamesEl.innerHTML = "";
-  gamesToShow = getGamesToShow(selectedGameGenre, selectedPlatform, page, gamesToShow).then(function (gamesToShow) {
-//  if (gamesToShow.length < 10 ) {
-//   console.log("NOT DONE");
-//  } else {
-// display all collected games 
- gamesToShowfunction(gamesToShow);
-//  console.log("DONE");
-//  }
+  gamesToShow = getGamesToShow(
+    selectedGameGenre,
+    selectedPlatform,
+    page,
+    gamesToShow
+  ).then(function (gamesToShow) {
+    //  if (gamesToShow.length < 10 ) {
+    //   console.log("NOT DONE");
+    //  } else {
+    // display all collected games
+    gamesToShowfunction(gamesToShow);
+    //  console.log("DONE");
+    //  }
   });
 };
 
 async function getGamesToShow(genre, platform, page, gamesToShow) {
   while (gamesToShow.length < totalGamesToShowOnPage) {
-
     console.log("gamesToShow: ", gamesToShow);
 
-  var apiUrlRAWG =
-    "https://api.rawg.io/api/games?key=" +
-    apiKey +
-    "&genres=" +
-    genre +
-    "&platforms=" +
-    platform +
-    "&page=" +
-    page;
+    var apiUrlRAWG =
+      "https://api.rawg.io/api/games?key=" +
+      apiKey +
+      "&genres=" +
+      genre +
+      "&platforms=" +
+      platform +
+      "&page=" +
+      page;
 
-console.log("apiUrlRAWG: " + apiUrlRAWG);
+    console.log("apiUrlRAWG: " + apiUrlRAWG);
+    var game = [];
+    const response = await fetch(apiUrlRAWG);
+    if (response.ok) {
+      const data = await response.json();
 
-
-    const games = await fetch(apiUrlRAWG).then(response => response.json()).then(function (data){ 
-
-    
-
-      if (data.next !== null ) {
+      if (data.next !== null && data.results !== undefined) {
         var gameNames = [];
-      for (var i = 0; i < data.results.length; i++) {
-        gameNames.push(data.results[i].name);
+        for (var i = 0; i < data.results.length; i++) {
+          gameNames.push(data.results[i].name);
+        }
       }
-    
-    return gameNames; 
-  }
-    
-    });
-
-    if ((games && games.length === 0) || (games === "No games found")) {
-      gamesToShow = games;
+    } else {
       break;
     }
-  
-    if (games !== undefined ) {
- for (var i = 0; i < games.length; i++) {
-    var apiUrlCheapShark =
-    "https://www.cheapshark.com/api/1.0/deals?title=" +
-    games[i] +
-    "&onSale=1" +
-    //   To get only exact names
-    "&exact=1";
-  console.log(apiUrlCheapShark);
 
+    if (gameNames !== undefined) {
+      for (var i = 0; i < gameNames.length; i++) {
+        var apiUrlCheapShark =
+          "https://www.cheapshark.com/api/1.0/deals?title=" +
+          gameNames[i] +
+          "&onSale=1" +
+          //   To get only exact names
+          "&exact=1";
+        console.log(apiUrlCheapShark);
 
-    await fetch(apiUrlCheapShark).then(response => response.json()).then(function (data){
-      if (data) {
-        
-          // Check if the game is on sale in any store
-          for (var i = 0; i < data.length; i++) {
-            if ((!gamesToShow.includes(data[i].title)) && (parseInt(data[i].dealRating)) > 3) {
-              gamesToShow.push(data[i].title);
+        await fetch(apiUrlCheapShark)
+          .then((response) => response.json())
+          .then(function (data) {
+            if (data) {
+              // Check if the game is on sale in any store
+              for (var i = 0; i < data.length; i++) {
+                if (
+                  !gamesToShow.includes(data[i].title) &&
+                  parseInt(data[i].dealRating) > 3
+                ) {
+                  gamesToShow.push(data[i].title);
+                }
+              }
             }
-        }}
-      
-      
-        });
+          });
+      }
+    }
+    page++;
+  }
 
- }}
- page++;}
-   
-
-return gamesToShow;
+  return gamesToShow;
 }
-
 
 function gamesToShowfunction(gamesToShow) {
   // console.log(typeof gamesToShow);
@@ -121,14 +118,14 @@ function gamesToShowfunction(gamesToShow) {
     gameContainer.innerHTML = "No games found";
     sectiontoShowGamesEl.appendChild(gameContainer);
   } else {
-  for (var i = 0; i < gamesToShow.length; i++) {
-  // console.log("GAMES_TO_SHOW: " + gamesToShow[i]);
-  gameContainer = document.createElement("div");
-  gameContainer.innerHTML = gamesToShow[i];
-  sectiontoShowGamesEl.appendChild(gameContainer);
+    for (var i = 0; i < gamesToShow.length; i++) {
+      // console.log("GAMES_TO_SHOW: " + gamesToShow[i]);
+      gameContainer = document.createElement("div");
+      gameContainer.innerHTML = gamesToShow[i];
+      sectiontoShowGamesEl.appendChild(gameContainer);
+    }
   }
-}}
-
+}
 
 searchGamesBtn.addEventListener("click", searchGamesSpecificGenreAndPlatform);
 
@@ -216,7 +213,6 @@ sectiontoShowGamesEl.addEventListener("click", function (event) {
 
                 // gameInfoEl.append(data[0].storeName)
                 // gameInfoEl.append(" Price: $" +storeObjArr[0].storePrice)
-                
 
                 console.log(arr);
                 // var storeId = data[0].storeName;
