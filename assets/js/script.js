@@ -7,9 +7,9 @@ var gameDetails = document.querySelector("#game-details");
 var apiKey = "6a8b35e595b04b39a8276e71021fa526";
 
 // How many games to search
-totalGamesToShowOnPage = 10;
+totalGamesToShowOnPage = 5;
 
-var gameInfoEl = document.getElementById("game-info");
+var gameInfoEl = document.getElementById("game-price-display")
 var apiKey = "6a8b35e595b04b39a8276e71021fa526";
 
 var gamesToShow = [];
@@ -130,6 +130,7 @@ function gamesToShowfunction(gamesToShow) {
 searchGamesBtn.addEventListener("click", searchGamesSpecificGenreAndPlatform);
 
 sectiontoShowGamesEl.addEventListener("click", function (event) {
+  clearContent();
   // console.log(event.target.innerHTML);
   var gameName = event.target.innerHTML;
   var apiUrl =
@@ -181,20 +182,34 @@ sectiontoShowGamesEl.addEventListener("click", function (event) {
                     }
                   }
                 }
-
                 // New Div for game clicked
-                var gameNameDiv = document.createElement("div");
-                gameNameDiv.textContent = gameName;
-                gameInfoEl.append(gameNameDiv);
-                // New Div for storeName
-                var gameStoreDiv = document.createElement("div");
-                gameStoreDiv.textContent = data[0].storeName;
-                gameInfoEl.append(gameStoreDiv);
+                var gameNameDiv = document.createElement("div")
+                gameNameDiv.textContent = gameName
+               gameInfoEl.append(gameNameDiv)
 
-                var gamePriceDiv = document.createElement("a");
-                gamePriceDiv.textContent =
-                  " Price: $" + storeObjArr[0].storePrice;
-                gameInfoEl.append(gamePriceDiv);
+                // div for game image
+                // var gameImgDiv = document.createElement("img")
+                // gameImgDiv.setAttribute
+                // New Div for storeName
+                
+                for(var i = 0; i < storeObjArr.length; i++){
+            
+                var displayContainer = document.createElement("div")
+                displayContainer.textContent = "Store: " + data[i].storeName + " $" + storeObjArr[i].storePrice
+                // displayContainer.append(gameStoreDiv)
+                // displayContainer.append(gamePriceDiv)
+                
+                
+                // var gameStoreDiv = document.createElement("div")
+                // gameStoreDiv.textContent = data[i].storeName
+                
+
+                // var gamePriceDiv = document.createElement("a")
+                // gamePriceDiv.textContent = storeObjArr[i].storePrice
+                gameInfoEl.appendChild(displayContainer)
+
+                displayContainer.style.display = "flex"
+                }
 
                 // gameInfoEl.append(data[0].storeName)
                 // gameInfoEl.append(" Price: $" +storeObjArr[0].storePrice)
@@ -209,3 +224,33 @@ sectiontoShowGamesEl.addEventListener("click", function (event) {
     }
   });
 });
+
+//Display image of game clicked
+sectiontoShowGamesEl.addEventListener("click", function(event) {
+  clearContent();
+  var gameImgEl = document.getElementById("game-image")
+  var gameClicked = event.target.innerHTML;
+  var rawgImageUrl = "https://api.rawg.io/api/games?key=" + apiKey + "&search=" + gameClicked + "&exact=1"
+fetch(rawgImageUrl).then(function (response) {
+  if(response.ok) {
+    response.json().then(function (data) {
+      // var imgArr = [];
+      // for(var i = 0; i < data.results.length; i++){
+        console.log(data.results[0].background_image)
+      var imgDisplay = data.results[0].background_image
+      var gameImg = document.createElement("img")
+      gameImg.style.width = '500px'
+      gameImg.style.height = 'auto'
+      gameImg.setAttribute("src", imgDisplay)
+      gameImgEl.append(gameImg)
+    })  
+}
+})
+})
+
+function clearContent() {
+  var modifiedArea = document.getElementById("game-price-display");  modifiedArea.textContent = "";
+  var modifiedArea = document.getElementById("game-image");  modifiedArea.textContent = "";
+}   
+      
+ 
