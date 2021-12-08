@@ -13,7 +13,7 @@ DealSella is the app for finding the best prices for games. There are two dropdo
 * [Usage Information](#usage-information)
 
 ## Link
-https://browntuckerr.github.io/SteamAPIproject/
+https://alexgorshkov02.github.io/SteamAPIproject/
 
 ## Screenshot
 ![Screenshot](./misc/screenshot.jpg?raw=true)
